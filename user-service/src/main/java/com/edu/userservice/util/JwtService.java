@@ -28,14 +28,14 @@ public class JwtService {
     }
 
     public String generateToken(UserDetails userDetails) {
-        Customer user = (Customer) userDetails;
+        //Customer user = (Customer) userDetails;
         HashMap<String, Object> claims = new HashMap<>();
         claims.put("authorities", userDetails.getAuthorities());
         claims.put("typ", "access-token");
         return generateToken(claims, userDetails);
     }
     public String generateRefreshToken(UserDetails userDetails) {
-        Customer user = (Customer) userDetails;
+        //Customer user = (Customer) userDetails;
         HashMap<String, Object> claims = new HashMap<>();
         claims.put("authorities", userDetails.getAuthorities());
         claims.put("typ", "refresh-token");

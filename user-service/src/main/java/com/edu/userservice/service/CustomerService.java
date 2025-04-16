@@ -1,15 +1,11 @@
 package com.edu.userservice.service;
 
-import com.edu.userservice.dto.AuthRequest;
 import com.edu.userservice.dto.AuthResponse;
 import com.edu.userservice.dto.CustomerRes;
-import com.edu.userservice.dto.RegRequest;
-import com.edu.userservice.model.Customer;
-
-import java.util.List;
+import com.edu.userservice.dto.CustomerRegRequest;
 
 public interface CustomerService {
-    AuthResponse register(RegRequest request);
+    AuthResponse register(CustomerRegRequest request);
     AuthResponse authenticate(String username, String password);
     CustomerRes getUserByUsername(String username);
     //AuthResponse login(AuthRequest authRequest);
