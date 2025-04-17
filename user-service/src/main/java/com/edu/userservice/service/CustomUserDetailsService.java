@@ -1,6 +1,7 @@
 package com.edu.userservice.service;
 
 import com.edu.userservice.model.Customer;
+import com.edu.userservice.repository.AdminRepository;
 import com.edu.userservice.repository.CustomerRepository;
 import com.edu.userservice.repository.DriverRepository;
 import com.edu.userservice.repository.RestaurantRepository;
@@ -18,6 +19,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final CustomerRepository userRepository;
     private final DriverRepository driverRepository;
     private final RestaurantRepository restaurantRepository;
+    private final AdminRepository adminRepository;
 
     @Override
     public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
@@ -25,6 +27,8 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .<UserDetails>map(user -> user)
                 .or(() -> driverRepository.findByUsername(usernameOrEmail)
                         .<UserDetails>map(driver -> driver))
+                .or(() -> adminRepository.findByUsername(usernameOrEmail)
+                        .<UserDetails>map(admin -> admin))
                 .or(() -> restaurantRepository.findByEmail(usernameOrEmail)
                         .<UserDetails>map(restaurant -> restaurant))
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + usernameOrEmail));
