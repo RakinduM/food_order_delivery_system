@@ -13,26 +13,33 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
-@Document(collection = "riders")
+@Document(collection = "restaurents")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Driver implements UserDetails {
+public class Restaurant implements UserDetails {
     @Id
     private String id;
-    private String firstName;
-    private String lastName;
-    private String username;
-    private String nic;
+    private String restaurantName;
+    private String restaurantAdmin;
+    private String type;
+    private String address;
     private String email;
     private String phoneNumber;
+    private String businessDoc;
+    private Boolean isAvailable;
     private String password;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // For simplicity, return a default role
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+
+    @Override
+    public String getUsername() {
+        return "";
     }
 
     @Override

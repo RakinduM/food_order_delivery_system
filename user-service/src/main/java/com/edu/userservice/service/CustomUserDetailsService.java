@@ -3,6 +3,7 @@ package com.edu.userservice.service;
 import com.edu.userservice.model.Customer;
 import com.edu.userservice.repository.CustomerRepository;
 import com.edu.userservice.repository.DriverRepository;
+import com.edu.userservice.repository.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,13 +17,16 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private final CustomerRepository userRepository;
     private final DriverRepository driverRepository;
+    private final RestaurantRepository restaurantRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username)
+    public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
+        return userRepository.findByUsername(usernameOrEmail)
                 .<UserDetails>map(user -> user)
-                .or(() -> driverRepository.findByUsername(username)
+                .or(() -> driverRepository.findByUsername(usernameOrEmail)
                         .<UserDetails>map(driver -> driver))
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+                .or(() -> restaurantRepository.findByEmail(usernameOrEmail)
+                        .<UserDetails>map(restaurant -> restaurant))
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + usernameOrEmail));
     }
 }
