@@ -1,4 +1,4 @@
-package com.edu.orderservice.model;
+package com.edu.orderservice.document;
 
 public enum OrderStatus {
     PLACED,

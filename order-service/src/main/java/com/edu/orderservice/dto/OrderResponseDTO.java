@@ -1,6 +1,6 @@
 package com.edu.orderservice.dto;
 
-import com.edu.orderservice.model.OrderStatus;
+import com.edu.orderservice.document.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

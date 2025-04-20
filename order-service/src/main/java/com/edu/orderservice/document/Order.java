@@ -1,4 +1,4 @@
-package com.edu.orderservice.model;
+package com.edu.orderservice.document;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,6 +1,6 @@
 package com.edu.orderservice.repository;
 
-import com.edu.orderservice.model.Order;
+import com.edu.orderservice.document.Order;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
