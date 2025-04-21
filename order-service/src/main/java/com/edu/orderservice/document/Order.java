@@ -10,11 +10,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.Instant;
 import java.util.List;
 
-@Document(collection = "orders")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Document(collection = "orders")
 public class Order {
 
     @Id
