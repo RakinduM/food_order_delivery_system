@@ -14,5 +14,8 @@ import java.util.List;
 public class OrderRequestDTO {
     private String customerId;
     private String restaurantId;
+    private String latitude;
+    private String longitude;
     private List<OrderItemRequestDTO> items;
+
 }
