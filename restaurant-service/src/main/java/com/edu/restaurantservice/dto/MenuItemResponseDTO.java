@@ -6,12 +6,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MenuItemRequestDTO {
+public class MenuItemResponseDTO {
+    private String id;
     private String restaurantId;
     private MenuItemCategory category;
     private String name;
@@ -20,5 +22,7 @@ public class MenuItemRequestDTO {
     private Double price;
     private MenuItemPortion portion;
     private Boolean is_available;
-    private List<MenuItemRequestDTO> menuItems;
+    private List<MenuItemResponseDTO> menuItems;
+    private Instant createdAt;
+    private Instant updatedAt;
 }
