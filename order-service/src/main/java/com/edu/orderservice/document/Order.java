@@ -24,8 +24,10 @@ public class Order {
     private String restaurantId;
     private OrderStatus status;
     private double totalAmount;
-    private String latitude;
-    private String longitude;
+    private String customer_latitude;
+    private String customer_longitude;
+    private String restaurant_latitude;
+    private String restaurant_longitude;
 
     private List<OrderItem> items;
     private Instant createdAt;

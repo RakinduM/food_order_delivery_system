@@ -35,8 +35,10 @@ public class OrderService {
         Order order = new Order();
         order.setCustomerId(dto.getCustomerId());
         order.setRestaurantId(dto.getRestaurantId());
-        order.setLatitude(dto.getLatitude());
-        order.setLongitude(dto.getLongitude());
+        order.setCustomer_latitude(dto.getCustomer_latitude());
+        order.setCustomer_longitude(dto.getCustomer_longitude());
+        order.setRestaurant_latitude(dto.getRestaurant_latitude());
+        order.setRestaurant_longitude(dto.getRestaurant_longitude());
         order.setItems(items);
         order.setTotalAmount(total);
         order.setStatus(OrderStatus.PLACED);
