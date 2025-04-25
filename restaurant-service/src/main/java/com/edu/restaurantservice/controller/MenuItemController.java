@@ -13,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/menu-items")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class MenuItemController {
 
     private final MenuItemService menuItemService;

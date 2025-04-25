@@ -19,9 +19,9 @@ public class MenuItem {
     @Id
     private String id;
     private String restaurantId;
-    private MenuItemCategory category;
     private String name;
     private String description;
+    private MenuItemCategory category;
     private String imageUrl;
     private Double price;
     private MenuItemPortion portion;
