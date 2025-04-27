@@ -80,8 +80,8 @@ public class DeliveryServiceImpl implements DeliveryService {
             message.put("distance", driverInfo.getDistance());
             message.put("eta", driverInfo.getEstimatedMinutes());
 
-            String driverQueue = "/queue/driver/" + driver.getDriverId() + "/orders";
-            messagingTemplate.convertAndSend(driverQueue, message);
+           String driverQueue = "/queue/driver/" + driver.getDriverId() + "/orders";
+           messagingTemplate.convertAndSend(driverQueue, message);
 
             try {
                 Boolean accepted = responseFuture.get(DRIVER_RESPONSE_TIMEOUT, TimeUnit.SECONDS);
