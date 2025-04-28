@@ -57,6 +57,13 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
+    public List<OrderResponseDTO> getOrdersByRestaurantId(String restaurantId) {
+        return orderRepository.findByRestaurantId(restaurantId)
+                .stream()
+                .map(order -> modelMapper.map(order, OrderResponseDTO.class))
+                .collect(Collectors.toList());
+    }
+
     public Optional<OrderResponseDTO> getOrderById(String orderId) {
         return orderRepository.findById(orderId)
                 .map(order -> modelMapper.map(order,

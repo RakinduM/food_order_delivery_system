@@ -28,6 +28,11 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getOrdersByCustomerId(customerId));
     }
 
+    @GetMapping("/restaurant/{restaurantId}")
+    public ResponseEntity<List<OrderResponseDTO>> getRestaurantOrders(@PathVariable String restaurantId){
+        return ResponseEntity.ok(orderService.getOrdersByRestaurantId(restaurantId));
+    }
+
     @GetMapping("/{orderId}")
     public ResponseEntity <OrderResponseDTO> getOrder(@PathVariable String orderId) {
         return orderService.getOrderById(orderId)
