@@ -5,6 +5,7 @@ import com.edu.userservice.model.Restaurant;
 import com.edu.userservice.repository.RestaurantRepository;
 import com.edu.userservice.util.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +22,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final ModelMapper modelMapper;
     private final AuthenticationManager authenticationManager;
 
     @Override
@@ -74,6 +78,21 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
+    public List<RestaurantRes> getAllRestaurants() {
+        return restaurantRepository.findAll()
+                .stream()
+                .map(restaurant -> modelMapper.map(restaurant, RestaurantRes.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public RestaurantRes getUserById(String id) {
+        Restaurant restaurant = restaurantRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + id));
+        return modelMapper.map(restaurant, RestaurantRes.class);
+    }
+
+    @Override
     public RestaurantRes getUserByEmail(String email) {
         Restaurant restaurant = restaurantRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + email));
@@ -85,12 +104,7 @@ public class RestaurantServiceImpl implements RestaurantService {
             // Handle invalid number format if needed
         }
 
-        return RestaurantRes.builder()
-                .id(restaurant.getId())
-                .restaurantName(restaurant.getRestaurantName())
-                .restaurantAdmin(restaurant.getRestaurantAdmin())
-                .phoneNumber(restaurant.getPhoneNumber())
-                .build();
+        return modelMapper.map(restaurant, RestaurantRes.class);
     }
 }
 

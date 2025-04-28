@@ -13,5 +13,9 @@ public class RestaurantRes {
     private String id;
     private String restaurantName;
     private String restaurantAdmin;
+    private String type;
+    private String address;
     private String phoneNumber;
+    private String businessDoc;
+    private Boolean isAvailable;
 }

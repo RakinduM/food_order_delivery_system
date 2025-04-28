@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/restaurant")
 @RequiredArgsConstructor
@@ -60,6 +62,16 @@ public class RestaurantController {
             @Valid @RequestBody ResAuthRequest request
     ) {
         return ResponseEntity.ok(restaurantService.authenticate(request.getEmail(), request.getPassword()));
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<List<RestaurantRes>> getRestaurants() {
+        return ResponseEntity.ok(restaurantService.getAllRestaurants());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<RestaurantRes> getRestaurant(@PathVariable String id) {
+        return ResponseEntity.ok(restaurantService.getUserById(id));
     }
 
     @GetMapping("/user/{email}")
