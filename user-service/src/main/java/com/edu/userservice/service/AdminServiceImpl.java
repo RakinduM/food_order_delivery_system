@@ -76,6 +76,7 @@ public class AdminServiceImpl implements AdminService {
 
         return AuthResponse.builder()
                 .token(jwtToken)
+                .id(user.getId())
                 .username(user.getUsername())
                 .build();
     }

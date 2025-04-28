@@ -70,6 +70,7 @@ public class DriverServiceImpl implements DriverService {
 
         return AuthResponse.builder()
                 .token(jwtToken)
+                .id(user.getId())
                 .username(user.getUsername())
                 .build();
     }
