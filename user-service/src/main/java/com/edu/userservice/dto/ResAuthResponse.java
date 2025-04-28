@@ -12,5 +12,6 @@ import lombok.NoArgsConstructor;
 public class ResAuthResponse {
     private String token;
     private String email;
+    private String restaurantId;
     private String message;
 }

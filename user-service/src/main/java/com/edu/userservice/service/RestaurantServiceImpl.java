@@ -69,6 +69,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         return ResAuthResponse.builder()
                 .token(jwtToken)
                 .email(user.getEmail())
+                .restaurantId(user.getId())
                 .build();
     }
 
