@@ -39,6 +39,12 @@ public class DriverRegRequest {
     @Size(min = 5, max = 50, message = "Number must be between 5 and 50 characters")
     private String phoneNumber;
 
+    @NotBlank(message = "Default is False")
+    private Boolean isAvailable;
+
+    @NotBlank(message = "Default is False")
+    private Boolean isApproved;
+
     @NotBlank(message = "Password is required")
     @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;

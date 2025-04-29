@@ -27,6 +27,8 @@ public class Driver implements UserDetails {
     private String nic;
     private String email;
     private String phoneNumber;
+    private Boolean isAvailable;
+    private Boolean isApproved;
     private String password;
 
     @Override

@@ -6,13 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class DriverRes {
-    private String id;
-    private String firstName;
-    private String lastName;
-    private String nic;
+public class DriverUpAvailabilityRequest {
     private Boolean isAvailable;
 }

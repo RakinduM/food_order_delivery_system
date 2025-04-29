@@ -1,9 +1,6 @@
 package com.edu.userservice.controller;
 
-import com.edu.userservice.dto.AuthRequest;
-import com.edu.userservice.dto.AuthResponse;
-import com.edu.userservice.dto.CustomerRegRequest;
-import com.edu.userservice.dto.DriverRegRequest;
+import com.edu.userservice.dto.*;
 import com.edu.userservice.service.DriverService;
 import com.edu.userservice.service.GcsService;
 import jakarta.validation.Valid;
@@ -13,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/driver")
@@ -29,7 +28,9 @@ public class DriverController {
             @RequestParam("firstName") String firstName,
             @RequestParam("lastName") String lastName,
             @RequestParam("number") String number,
-            @RequestParam("nicImage") MultipartFile nicImage
+            @RequestParam("nicImage") MultipartFile nicImage,
+            @RequestParam("isAvailable") Boolean isAvailable,
+            @RequestParam("isApproved") Boolean isApproved
     ) {
         try {
             String nicImageUrl = gcsService.uploadFile(nicImage);
@@ -41,6 +42,8 @@ public class DriverController {
                     .nic(nicImageUrl)
                     .email(email)
                     .phoneNumber(number)
+                    .isAvailable(isAvailable)
+                    .isApproved(isApproved)
                     .password(password)
                     .build();
 
@@ -60,12 +63,30 @@ public class DriverController {
         return ResponseEntity.ok(driverService.authenticate(request.getUsername(), request.getPassword()));
     }
 
+    @GetMapping("/available")
+    public ResponseEntity<List<DriverRes>> getAvailableDrivers() {
+        return ResponseEntity.ok(driverService.getAvailableDrivers());
+    }
+
     @GetMapping("/user/{username}")
     public ResponseEntity<?> getUserByUsername(@PathVariable String username) {
         try {
             return ResponseEntity.ok(driverService.getUserByUsername(username));
         } catch (UsernameNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        }
+    }
+
+    @PatchMapping("/{driverId}/availability")
+    public ResponseEntity<String> updateDriverAvailability(
+            @PathVariable String driverId,
+            @RequestBody DriverUpAvailabilityRequest request
+    ){
+        boolean updated = driverService.updateDriverAvailability(driverId, request.getIsAvailable());
+        if(updated) {
+            return ResponseEntity.ok("Driver availability updated");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Driver not found");
         }
     }
 }

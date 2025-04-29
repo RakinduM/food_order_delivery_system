@@ -9,6 +9,7 @@ import com.edu.userservice.model.Driver;
 import com.edu.userservice.repository.DriverRepository;
 import com.edu.userservice.util.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,6 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +26,9 @@ public class DriverServiceImpl implements DriverService {
     private final DriverRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final ModelMapper modelMapper;
     private final AuthenticationManager authenticationManager;
+    private final DriverRepository driverRepository;
 
     @Override
     public AuthResponse register(DriverRegRequest request) {
@@ -40,6 +45,8 @@ public class DriverServiceImpl implements DriverService {
                 .nic(request.getNic())
                 .email(request.getEmail())
                 .phoneNumber(request.getPhoneNumber())
+                .isAvailable(false)
+                .isApproved(false)
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build();
 
@@ -51,6 +58,7 @@ public class DriverServiceImpl implements DriverService {
         return AuthResponse.builder()
                 .token(jwtToken)
                 .username(user.getUsername())
+                .id(user.getId())
                 .build();
     }
 
@@ -70,8 +78,8 @@ public class DriverServiceImpl implements DriverService {
 
         return AuthResponse.builder()
                 .token(jwtToken)
-                .id(user.getId())
                 .username(user.getUsername())
+                .id(user.getId())
                 .build();
     }
 
@@ -87,11 +95,26 @@ public class DriverServiceImpl implements DriverService {
             // Handle invalid number format if needed
         }
 
-        return DriverRes.builder()
-                .id(driver.getId())
-                .firstName(driver.getFirstName())
-                .lastName(driver.getLastName())
-                .nic(driver.getNic())
-                .build();
+        return modelMapper.map(driver, DriverRes.class);
     }
+
+    @Override
+    public List<DriverRes> getAvailableDrivers() {
+        List<Driver> availableDrivers = userRepository.findByIsAvailableTrue();
+
+        return availableDrivers.stream()
+                .map(driver -> modelMapper.map(driver, DriverRes.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Boolean updateDriverAvailability(String driverId, Boolean isAvailable) {
+        return driverRepository.findById(driverId).map(driver -> {
+            driver.setIsAvailable(isAvailable);
+            driverRepository.save(driver);
+            return true;
+        }).orElse(false);
+    }
+
+
 }
