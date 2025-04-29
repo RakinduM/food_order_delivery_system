@@ -1,6 +1,4 @@
-README.txt
-
-Project Title: Foodify - Full Stack Food Delivery App
+Project Title: Foodify - Full Stack Food Delivery App with Microservices
 
 Overview:
 ---------
