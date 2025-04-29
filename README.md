@@ -7,7 +7,7 @@ Foodify is a food delivery web application built using React for the frontend an
 Architecture:
 -------------
 Frontend:
-- React.js (Port: 8081)
+- React.js (Port: 5173)
 
 Backend Microservices (Spring Boot):
 1. Restaurant Service   - Port: 8080
@@ -15,17 +15,18 @@ Backend Microservices (Spring Boot):
 3. User Service         - Port: 8089
 4. Delivery Service     - Port: 8086
 5. Notification Service - Port: 8092
-6. Payment Service - Port 8091
+6. Payment Service      - Port: 8091
 
 Each service runs independently and communicates via REST APIs.
 
 Technologies Used:
 ------------------
 Frontend:
-- React.js
+- React.js with Typescript
 - Axios
-- React Router
-- Tailwind CSS (or other CSS frameworks)
+- React Router Dom
+- Tailwind CSS
+- Mapbox GL
 
 Backend (per service):
 - Spring Boot
@@ -33,6 +34,12 @@ Backend (per service):
 - MongoDB
 - Eureka (optional - for service discovery)
 - Maven
+
+Payment Gateway:
+- Stripe
+
+Cloud Storage:
+- Google cloud bucket
 
 Getting Started:
 ----------------
