@@ -5,56 +5,70 @@ import com.edu.deliveryservice.model.Location;
 import com.edu.deliveryservice.service.DeliveryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/delivery")
+@Controller
 @RequiredArgsConstructor
+@Slf4j
 public class DeliveryController {
     private final DeliveryService deliveryService;
+    private final SimpMessagingTemplate messagingTemplate;
 
-    @PostMapping("/assign")
-    public ResponseEntity<DeliveryResponseDTO> assign(@RequestBody AssignDeliveryRequestDTO dto) {
-        return ResponseEntity.ok(deliveryService.assignDelivery(dto));
+    @MessageMapping("/delivery/assign")
+    public void assign(AssignDeliveryRequestDTO dto) {
+        DeliveryResponseDTO response = deliveryService.assignDelivery(dto);
+        messagingTemplate.convertAndSend("/topic/delivery/" + dto.getOrderId(), response);
     }
 
-    @PostMapping("/assign-auto")
-    public ResponseEntity<DeliveryResponseDTO> autoAssign(@RequestBody AssignAutoDeliveryRequestDTO dto) {
-        return ResponseEntity.ok(deliveryService.autoAssignDeliveryWithDriverResponse(dto));
+    @MessageMapping("/delivery/assign-auto")
+    public DeliveryResponseDTO autoAssign(AssignAutoDeliveryRequestDTO dto) {
+        log.info("Auto-assign request received: {}", dto);
+        return deliveryService.autoAssignDeliveryWithDriverResponse(dto);
     }
 
-    @PostMapping("/track")
-    public ResponseEntity<DeliveryResponseDTO> track(@RequestBody TrackingUpdateDTO dto) {
-        return ResponseEntity.ok(deliveryService.updateTracking(dto));
+
+    @MessageMapping("/delivery/track-update")
+    public DeliveryResponseDTO track(TrackingUpdateDTO dto) {
+        return deliveryService.updateTracking(dto);
     }
 
-    @GetMapping("/track/{orderId}")
-    public ResponseEntity<List<Location>> getTracking(@PathVariable String orderId) {
-        return ResponseEntity.ok(deliveryService.getTrackingHistory(orderId));
+
+    @MessageMapping("/delivery/track-history")
+    public List<Location> getTracking(String orderId) {
+        return deliveryService.getTrackingHistory(orderId);
     }
 
-    @GetMapping("/location/{orderId}")
-    public ResponseEntity<Location> getCurrent(@PathVariable String orderId) {
-        return deliveryService.getCurrentLocation(orderId).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+
+    @MessageMapping("/delivery/location")
+    public Location getCurrent(String orderId) {
+        return deliveryService.getCurrentLocation(orderId)
+                .orElse(null);
     }
 
-    @PutMapping("/status/{orderId}")
-    public ResponseEntity<Void> updateStatus(@PathVariable String orderId, @RequestParam String status) {
-        deliveryService.updateStatus(orderId, status);
-        return ResponseEntity.ok().build();
+
+    @MessageMapping("/delivery/status")
+    public void updateStatus(UpdateStatusDTO dto) {
+        deliveryService.updateStatus(dto.getOrderId(), dto.getStatus());
+        messagingTemplate.convertAndSend("/topic/delivery/" + dto.getOrderId() + "/status", dto.getStatus());
     }
 
-    @PutMapping("/complete/{orderId}")
-    public ResponseEntity<Void> complete(@PathVariable String orderId) {
+    // Handler for marking the delivery as complete
+    @MessageMapping("/delivery/complete")
+    public void complete(String orderId) {
         deliveryService.completeDelivery(orderId);
-        return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/driver-response")
-    public ResponseEntity<Void> handleDriverResponse(@RequestBody DriverResponseDTO dto) {
+
+    // Handler for receiving driver responses
+    @MessageMapping("/delivery/driver-response")
+    public void handleDriverResponse(DriverResponseDTO dto) {
         deliveryService.handleDriverResponse(dto);
-        return ResponseEntity.ok().build();
     }
+
 }
