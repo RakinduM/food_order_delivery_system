@@ -47,7 +47,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 
     @Override
     public DeliveryResponseDTO autoAssignDeliveryWithDriverResponse(AssignAutoDeliveryRequestDTO dto) {
-        DriverLocationDTO[] availableDrivers = restTemplate.getForObject("http://USER-SERVICE/drivers/available", DriverLocationDTO[].class);
+        DriverLocationDTO[] availableDrivers = restTemplate.getForObject("http://localhost:8089/api/driver/available", DriverLocationDTO[].class);
         if (availableDrivers == null || availableDrivers.length == 0) throw new RuntimeException("No available drivers");
 
         List<DriverDistanceInfo> nearbyDrivers = new ArrayList<>();

@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 public class MapboxService {
     private static final Logger logger = LoggerFactory.getLogger(MapboxService.class);
 
-    private static final double MAX_DRIVER_DISTANCE_KM = 5.0;
+    private static final double MAX_DRIVER_DISTANCE_KM = 8.0;
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
