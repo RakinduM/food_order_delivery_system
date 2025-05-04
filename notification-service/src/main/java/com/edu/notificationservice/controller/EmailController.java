@@ -1,4 +1,4 @@
-package com.edu.notificationservice;
+package com.edu.notificationservice.controller;
 
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -19,7 +19,7 @@ public class EmailController {
         this.mailSender = mailSender;
     }
 
-    @GetMapping("/send")
+    @GetMapping("/sendDeliverComplete")
     public String sendTestEmail(@RequestParam String toEmail) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
@@ -27,13 +27,13 @@ public class EmailController {
 
             helper.setFrom("hirunisliit@gmail.com"); // Replace with your verified sender email
             helper.setTo(toEmail);
-            helper.setSubject("Test Email - Snap Eats");
-            helper.setText("<h3>This is a test email from Snap Eats Notification Service.</h3>", true);
+            helper.setSubject("Deliver Success - Foodify");
+            helper.setText("<h3>Your Order has been delivered succesfully</h3>", true);
 
             mailSender.send(message);
-            return "Test email sent successfully to: " + toEmail;
+            return "Delivery success email sent successfully to: " + toEmail;
         } catch (Exception e) {
-            return "Failed to send test email: " + e.getMessage();
+            return "Failed to send email: " + e.getMessage();
         }
     }
 
