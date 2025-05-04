@@ -16,6 +16,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 @Slf4j
 public class DeliveryController {
     private final DeliveryService deliveryService;
