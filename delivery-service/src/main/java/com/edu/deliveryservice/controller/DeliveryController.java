@@ -3,6 +3,7 @@ package com.edu.deliveryservice.controller;
 import com.edu.deliveryservice.dto.*;
 import com.edu.deliveryservice.model.Location;
 import com.edu.deliveryservice.service.DeliveryService;
+import com.edu.deliveryservice.service.DriverLocationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -15,14 +16,28 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 @Slf4j
 public class DeliveryController {
     private final DeliveryService deliveryService;
     private final SimpMessagingTemplate messagingTemplate;
+    private final DriverLocationService driverLocationService;
+
+    @MessageMapping("/hello")
+    public void hello(String message) {
+        log.info("Received message: {}", message);
+        messagingTemplate.convertAndSend("/topic/hello", "GG Hello World");
+    }
+
+    @MessageMapping("/driver/location") // e.g. "/app/driver/location"
+    public void receiveLocation(DriverLocationDTO location) {
+        driverLocationService.updateDriverLocation(location.getDriverId(), location);
+    }
 
     @MessageMapping("/delivery/assign")
     public void assign(AssignDeliveryRequestDTO dto) {
         DeliveryResponseDTO response = deliveryService.assignDelivery(dto);
+        log.info("Assign request received: {}", dto);
         messagingTemplate.convertAndSend("/topic/delivery/" + dto.getOrderId(), response);
     }
 

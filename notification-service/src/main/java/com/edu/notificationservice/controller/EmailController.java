@@ -1,4 +1,4 @@
-package com.edu.notificationservice;
+package com.edu.notificationservice.controller;
 
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -10,12 +10,31 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/notification")
+@CrossOrigin(origins="*")
 public class EmailController {
 
     private final JavaMailSender mailSender;
 
     public EmailController(JavaMailSender mailSender) {
         this.mailSender = mailSender;
+    }
+
+    @GetMapping("/sendDeliverComplete")
+    public String sendTestEmail(@RequestParam String toEmail) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+            helper.setFrom("hirunisliit@gmail.com"); // Replace with your verified sender email
+            helper.setTo(toEmail);
+            helper.setSubject("Deliver Success - Foodify");
+            helper.setText("<h3>Your Order has been delivered succesfully</h3>", true);
+
+            mailSender.send(message);
+            return "Delivery success email sent successfully to: " + toEmail;
+        } catch (Exception e) {
+            return "Failed to send email: " + e.getMessage();
+        }
     }
 
     @GetMapping("/send-otp")
@@ -27,7 +46,7 @@ public class EmailController {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-            helper.setFrom("it22143204@my.sliit.lk");
+            helper.setFrom("hirunisliit@gmail.com");
             helper.setTo(toEmail);
             helper.setSubject("Your Snap Eats OTP Code");
 
@@ -53,13 +72,13 @@ public class EmailController {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-            helper.setFrom("it22143204@my.sliit.lk");
+            helper.setFrom("hirunisliit@gmail.com");
             helper.setTo(toEmail);
             helper.setSubject("Restaurant Registration Success - Snap Eats");
 
             // Load HTML template for restaurant registration success email
             try (var inputStream = Objects.requireNonNull(
-                    EmailController.class.getResourceAsStream("/templates/restaurantRegisteredMail.html"))) {
+                    EmailController.class.getResourceAsStream("/templates/restaurantSuccessMail.html"))) {
                 String html = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
                 helper.setText(html, true);
             }
@@ -78,7 +97,7 @@ public class EmailController {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-            helper.setFrom("it22143204@my.sliit.lk");
+            helper.setFrom("hirunisliit@gmail.com");
             helper.setTo(toEmail);
             helper.setSubject("Driver Registration Success - Snap Eats");
 

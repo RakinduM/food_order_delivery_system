@@ -26,6 +26,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     private final RestTemplate restTemplate;
     private final SimpMessagingTemplate messagingTemplate;
     private final MapboxService mapboxService;
+    private final DriverLocationService driverLocationService;
 
     private final Map<String, CompletableFuture<Boolean>> driverResponses = new ConcurrentHashMap<>();
     private final long DRIVER_RESPONSE_TIMEOUT = 15L;
@@ -47,8 +48,10 @@ public class DeliveryServiceImpl implements DeliveryService {
 
     @Override
     public DeliveryResponseDTO autoAssignDeliveryWithDriverResponse(AssignAutoDeliveryRequestDTO dto) {
-        DriverLocationDTO[] availableDrivers = restTemplate.getForObject("http://localhost:8089/api/driver/available", DriverLocationDTO[].class);
-        if (availableDrivers == null || availableDrivers.length == 0) throw new RuntimeException("No available drivers");
+//        DriverRes[] availableDrivers = restTemplate.getForObject("http://localhost:8089/api/driver/available", DriverRes[].class);
+        List<DriverLocationDTO> availableDrivers = driverLocationService.getAllDriverLocations();
+        //if (availableDrivers == null || availableDrivers.length == 0) throw new RuntimeException("No available drivers");
+
 
         List<DriverDistanceInfo> nearbyDrivers = new ArrayList<>();
         for (DriverLocationDTO driver : availableDrivers) {
@@ -84,7 +87,7 @@ public class DeliveryServiceImpl implements DeliveryService {
            messagingTemplate.convertAndSend(driverQueue, message);
 
             try {
-                Boolean accepted = responseFuture.get(DRIVER_RESPONSE_TIMEOUT, TimeUnit.SECONDS);
+                Boolean accepted = true;
                 if (accepted != null && accepted) {
                     AssignDeliveryRequestDTO assignDto = new AssignDeliveryRequestDTO();
                     assignDto.setOrderId(dto.getOrderId());
